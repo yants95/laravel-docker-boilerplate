@@ -1,0 +1,36 @@
+version: "3"
+services:
+  app:
+    image: leoqbc/php-sqlserver
+    container_name: laravel_app
+    working_dir: /app
+    networks:
+      - laravel-network
+    ports:
+      - 8888:80
+    volumes:
+      - ./src:/app
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/public
+      - PHP_DATE_TIMEZONE=America/Sao_Paulo
+      - PHP_DISPLAY_ERRORS=1
+      - php.error_reporting=E_ALL
+    links:
+      - sqlsrv
+    
+  sqlsrv:
+    image: mcr.microsoft.com/mssql/server:latest-ubuntu
+    container_name: sqlserver
+    restart: always
+    networks: 
+      - laravel-network
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Jko3va-D9821jhsvGD
+      - MSSQL_PID=Developer
+
+networks:
+  laravel-network:
+    driver: bridge
